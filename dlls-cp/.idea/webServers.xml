@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="03dc4a18-4017-4477-9afa-8e3087f7d29a" name="Daddy Long Legs Studios Development Server" url="https://dlls-cp.dev.cc/">
+        <fileTransfer port="0" accessType="LOCAL" />
+      </webServer>
+    </option>
+  </component>
+</project>

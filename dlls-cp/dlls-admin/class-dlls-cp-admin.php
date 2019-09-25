@@ -53,6 +53,7 @@ class Dlls_Cp_Admin
 
         $this->plugin_name = $plugin_name;
         $this->version = $version;
+        $this->dlls_options = get_option($this->plugin_name);
 
     }
 
@@ -64,20 +65,14 @@ class Dlls_Cp_Admin
     public function enqueue_styles()
     {
 
-        /**
-         * This function is provided for demonstration purposes only.
-         *
-         * An instance of this class should be passed to the run() function
-         * defined in Dlls_Cp_Loader as all of the hooks are defined
-         * in that particular class.
-         *
-         * The Dlls_Cp_Loader will then create the relationship
-         * between the defined hooks and the functions defined in this
-         * class.
-         */
+        if ('settings_page_dlls_cp' == get_current_screen()->id) {
+            // Stylesheet fro color picker
+            wp_enqueue_style('wp-color-picker');
+            // style sheet for thickbox
+            wp_enqueue_style('thickbox');
 
-        wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/dlls-cp-dlls-admin.css', array(), $this->version, 'all');
-
+            wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/dlls-cp-dlls-admin.css', array(), $this->version, 'all');
+        }
     }
 
     /**
@@ -100,8 +95,10 @@ class Dlls_Cp_Admin
          * class.
          */
 
-        wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/dlls-cp-dlls-admin.js', array('jquery'), $this->version, false);
-
+        if ('settings_page_dlls_cp' == get_current_screen()->id) {
+            wp_enqueue_media();
+            wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/dlls-cp-dlls-admin.js', array('jquery'), $this->version, false);
+        }
     }
 
     /**
@@ -152,20 +149,22 @@ class Dlls_Cp_Admin
         include_once('partials/dlls-cp-admin-display.php');
     }
 
+    public function options_update()
+    {
+        register_setting($this->plugin_name, $this->plugin_name, array($this, 'validate'));
+    }
+
 	public function validate( $input ) {
 		$valid = array();
 
 		$valid['favicon'] = (isset($input['favicon']) && !empty($input['favicon'])) ? 1 : 0;
 		$valid['footer'] = ( isset( $input['footer'] ) && ! empty( $input['footer'] ) ) ? 1 : 0;
 		$valid['toolbar'] = ( isset( $input['toolbar'] ) && ! empty( $input['toolbar'] ) ) ? 1 : 0;
-		$valid['dlls_wp_update'] = ( isset( $input['dlls_wp_update'] ) && ! empty( $input['dlls_wp_update'] ) ) ? 1 : 0;
+        //$valid['dlls_wp_update'] = ( isset( $input['dlls_wp_update'] ) && ! empty( $input['dlls_wp_update'] ) ) ? 1 : 0;
 		$valid['plugin'] = ( isset( $input['plugin'] ) && ! empty( $input['plugin'] ) ) ? 1 : 0;
 		$valid['gutenburg'] = ( isset( $input['gutenburg'] ) && ! empty( $input['gutenburg'] ) ) ? 1 : 0;
 
 		return $valid;
     }
 
-	public function options_update() {
-		register_setting($this->plugin_name, $this->plugin_name, array($this, 'validate'));
-    }
 }
